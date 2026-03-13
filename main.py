@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-import models, schemas
+import models
+import schemas
 from database import engine, SessionLocal
 
 # 1. Membuat tabel di database
