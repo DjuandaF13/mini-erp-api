@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+import requests
 import models
 import schemas
 from database import engine, SessionLocal
@@ -87,3 +88,37 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     db.delete(db_product)
     db.commit()
     return {"message": f"Barang dengan ID {product_id} berhasil dihapus dari sistem"}
+
+
+# --- ENDPOINT PAMUNGKAS: TOTAL ASET & KONVERSI LIVE USD ---
+@app.get("/assets/total")
+def get_total_assets(db: Session = Depends(get_db)):
+    # 1. Ambil semua barang dari database
+    products = db.query(models.Product).all()
+
+    # 2. Hitung total aset dalam IDR (Harga x Stok untuk setiap barang)
+    total_idr = sum(p.price * p.stock for p in products)
+
+    # 3. Panggil Public API untuk mendapatkan kurs IDR ke USD hari ini
+    url = "https://open.er-api.com/v6/latest/IDR"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Pastikan tidak ada error jaringan
+        data = response.json()
+        usd_rate = data["rates"]["USD"]
+    except Exception as e:
+        # Jika API luar sedang gangguan, kita beri pesan error yang rapi
+        raise HTTPException(
+            status_code=503, detail="Gagal mengambil data kurs mata uang global."
+        )
+
+    # 4. Kalikan total IDR dengan kurs USD
+    total_usd = total_idr * usd_rate
+
+    # 5. Kembalikan laporannya ke pengguna
+    return {
+        "pesan": "Kalkulasi aset berhasil",
+        "total_aset_idr": total_idr,
+        "kurs_usd_saat_ini": usd_rate,
+        "total_aset_usd": round(total_usd, 2),  # Dibulatkan 2 angka di belakang koma
+    }

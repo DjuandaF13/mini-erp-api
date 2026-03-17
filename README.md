@@ -12,7 +12,7 @@ Sebuah RESTful API yang disimulasikan sebagai *backend* sistem Enterprise Resour
 
 ## ✨ Fitur (Roadmap)
 - [x] **Create Product:** Menambahkan barang baru ke dalam gudang beserta detail harga dan jumlah stok.
-- [ ] **Read Product:** Melihat daftar seluruh barang yang ada di sistem (Segera hadir).
-- [ ] **Update Product:** Mengubah data barang seperti penyesuaian harga atau stok (Segera hadir).
-- [ ] **Delete Product:** Menghapus barang dari sistem (Segera hadir).
-- [ ] **Live Currency Integration:** Mengonversi total nilai aset ke USD menggunakan *Public API* pihak ketiga secara *real-time* (Segera hadir).
+- [x] **Read Product:** Melihat daftar seluruh barang yang ada di sistem.
+- [x] **Update Product:** Mengubah data barang seperti penyesuaian harga atau stok.
+- [x] **Delete Product:** Menghapus barang dari sistem.
+- [x] **Live Currency Integration:** Mengonversi total nilai aset ke USD menggunakan *Public API* pihak ketiga secara *real-time*.
